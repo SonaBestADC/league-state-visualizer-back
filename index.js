@@ -4,14 +4,14 @@ import cors from "cors";
 const key = process.env.KEY;
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: process.env.ORIGIN }));
 
 app.get("/", (req, res) => {
   res.send("uWu!");
 });
 
 app.get("/user", async (req, res) => {
-  const { name, tag } = req.body;
+  const { name, tag } = req.query;
   const url =
     `https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}?api_key=${key}`;
   try {
@@ -29,9 +29,9 @@ app.get("/user", async (req, res) => {
 });
 
 app.get("/ranked-stats", async (req, res) => {
-  const { puid } = req.body;
+  const { puuid } = req.query;
   const url =
-    `https://na1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puid}?api_key=${key}`;
+    `https://na1.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}?api_key=${key}`;
   try {
     const responce = await fetch(url, {
       method: "GET",
@@ -40,7 +40,6 @@ app.get("/ranked-stats", async (req, res) => {
       throw new Error(`ERROR ${responce.status}`);
     }
     const data = await responce.json();
-    console.log(data);
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -48,9 +47,9 @@ app.get("/ranked-stats", async (req, res) => {
 });
 
 app.get("/champ-masteries", async (req, res) => {
-  const { puid } = req.body;
+  const { puuid } = req.query;
   const url =
-    `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puid}?api_key=${key}`;
+    `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}?api_key=${key}`;
   try {
     const responce = await fetch(url, {
       method: "GET",
