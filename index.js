@@ -1,10 +1,14 @@
 import process from "node:process";
 import express from "express";
+import dotenv from "dotenv";
 import cors from "cors";
+import DatabaseHandler from "./databaseHandler.js";
+const database = await DatabaseHandler.init();
+dotenv.config();
 const key = process.env.KEY;
 const app = express();
+app.use(cors());
 app.use(express.json());
-app.use(cors({ origin: process.env.ORIGIN }));
 
 app.get("/", (req, res) => {
   res.send("uWu!");
@@ -64,7 +68,33 @@ app.get("/champ-masteries", async (req, res) => {
   }
 });
 
+app.get("/all-records", async (req, res) => {
+  try {
+    const data = await database.getAllRecords();
+    res.json(data);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+app.post("/addRecord", async (req, res) => {
+  try {
+    const insertedRecord = await database.addRecord(req.body);
+    res.json(insertedRecord);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.get("/record/:puuid", async (req, res) => {
+  try {
+    const result = await database.getRecordsByPuuid(req.params.puuid);
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 app.listen(process.env.PORT, () => (
   console.log(`Listening on port ${process.env.PORT}`)
 ));
-

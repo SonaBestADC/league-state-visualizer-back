@@ -1,5 +1,6 @@
 {
   "name": "league-stat-visualizer-back",
+  "proxy": "http://localhost:4000",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -12,6 +13,9 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express.js": "^1.0.0"
+    "dotenv": "^17.0.1",
+    "express.js": "^1.0.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   }
 }
